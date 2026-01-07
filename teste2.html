@@ -1,0 +1,157 @@
+<!-- ====== LISTA DE VÍDEOS (YouTube) ====== -->
+<section class="video-list">
+	<div class="video-header">
+		<h3>Vídeos</h3>
+
+		<div class="video-controls">
+			<button class="btn-nav" id="prevBtn" aria-label="Anterior">‹</button>
+			<button class="btn-nav" id="nextBtn" aria-label="Próximo">›</button>
+		</div>
+	</div>
+
+	<div class="video-strip" id="videoStrip"></div>
+</section>
+
+<script>
+	// Coloque aqui os IDs (o trecho depois de "v=" no link do YouTube)
+	const videoIds = ["dQw4w9WgXcQ", "kJQP7kiw5Fk", "3JZ_D3ELwOQ"];
+
+	const strip = document.getElementById("videoStrip");
+
+	// Prefira "youtube-nocookie.com" pra reduzir cookies (mais “clean” pro mídia kit)
+	function makeEmbedURL(id) {
+		return `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1`;
+	}
+
+	strip.innerHTML = videoIds
+		.map(
+			(id) => `
+        <article class="video-card">
+          <div class="video-frame">
+            <iframe
+              src="${makeEmbedURL(id)}"
+              title="YouTube video"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          </div>
+        </article>
+      `
+		)
+		.join("");
+
+	// Navegação por botões (opcional)
+	const scrollAmount = 420;
+
+	document.getElementById("prevBtn").addEventListener("click", () => {
+		strip.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+	});
+
+	document.getElementById("nextBtn").addEventListener("click", () => {
+		strip.scrollBy({ left: scrollAmount, behavior: "smooth" });
+	});
+
+	// Auto-scroll (opcional): comente se não quiser
+	let auto = setInterval(
+		() => strip.scrollBy({ left: 2, behavior: "auto" }),
+		16
+	);
+
+	strip.addEventListener("mouseenter", () => clearInterval(auto));
+	strip.addEventListener("mouseleave", () => {
+		auto = setInterval(() => strip.scrollBy({ left: 2, behavior: "auto" }), 16);
+	});
+</script>
+
+<style>
+	.video-list {
+		width: 100%;
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 24px 16px;
+	}
+
+	.video-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		margin-bottom: 12px;
+	}
+
+	.video-header h3 {
+		margin: 0;
+		font-size: 1.2rem;
+	}
+
+	.video-controls {
+		display: flex;
+		gap: 8px;
+	}
+
+	.btn-nav {
+		border: 1px solid rgba(0, 0, 0, 0.15);
+		background: white;
+		width: 40px;
+		height: 40px;
+		border-radius: 12px;
+		cursor: pointer;
+		font-size: 20px;
+		line-height: 1;
+	}
+
+	.btn-nav:hover {
+		transform: translateY(-1px);
+	}
+
+	/* A “lista” horizontal */
+	.video-strip {
+		display: flex;
+		gap: 16px;
+		overflow-x: auto;
+		padding-bottom: 8px;
+		scroll-snap-type: x mandatory;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.video-strip::-webkit-scrollbar {
+		height: 10px;
+	}
+
+	.video-strip::-webkit-scrollbar-thumb {
+		background: rgba(0, 0, 0, 0.18);
+		border-radius: 999px;
+	}
+
+	.video-card {
+		flex: 0 0 auto;
+		width: 380px;
+		scroll-snap-align: start;
+	}
+
+	/* Mantém o player responsivo (16:9) */
+	.video-frame {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		border-radius: 16px;
+		overflow: hidden;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+		background: #000;
+	}
+
+	.video-frame iframe {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	@media (max-width: 480px) {
+		.video-card {
+			width: 85vw;
+		}
+	}
+</style>
