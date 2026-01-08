@@ -40,8 +40,7 @@ body {
 	background-color: var(--color-bg-light);
 	color: var(--color-text-dark);
 	line-height: 1.6;
-	overflow-x: hidden;
-
+	max-width: 100%;
 	/* Mantive porque no seu CSS original isso SOBRESCREVE a font do body (pra system UI). */
 	font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
 }
@@ -137,18 +136,20 @@ a {
 	-webkit-backdrop-filter: blur(8px);
 	background-color: var(--color-bg-dark);
 	border-bottom: 1px solid rgba(var(--rgb-ouro), 0.2);
+
+	max-width: 100vw;
 }
 .navbar--hidden {
 	transform: translateY(-100%);
 }
 
 .header-container {
-	max-width: 64rem;
 	margin: 0 auto;
 	padding: 0.75rem 1.25rem;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	max-width: 100%;
 }
 
 .brand-group {
@@ -1345,7 +1346,7 @@ a {
 }
 
 .metric-phone img {
-	width: 90%;
+	width: 80%;
 	height: auto;
 	display: block;
 	filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.35));
@@ -1356,6 +1357,9 @@ a {
 }
 .metric-card--right .metric-phone {
 	left: -6%;
+}
+.metrics-wrap {
+	overflow: hidden;
 }
 
 @media (max-width: 680px) {
@@ -1447,4 +1451,33 @@ a {
 }
 .location-group .progress-fill.beige {
 	background: #d7c2aa;
+}
+
+.displaynone {
+	display: none;
+}
+.displayblock {
+	display: block;
+}
+
+.phone-mockup {
+	position: relative;
+}
+
+/* impede o toggle nativo play/pause por clique */
+.video-thumb {
+	pointer-events: none;
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+.video-overlay {
+	position: absolute;
+	inset: 0;
+	background: transparent;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+	touch-action: manipulation;
 }
