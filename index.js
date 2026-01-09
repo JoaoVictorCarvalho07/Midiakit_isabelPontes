@@ -150,18 +150,18 @@ const criacarrosel = () => {
 };
 
 criacarrosel(names);
-document.getElementsByClassName("gallery-grid")[0].innerHTML = names
-	.map(
-		(name) => `
-        <div class="photo-item">
-          <img src="./assets/fotos-fotografia/${name}" alt="isabelpontes.com.br"/>
-        </div>
-      `
-	)
-	.join("");
+// document.getElementsByClassName("gallery-grid")[0].innerHTML = names
+// 	.map(
+// 		(name) => `
+//         <div class="photo-item">
+//           <img src="./assets/fotos-fotografia/${name}" alt="isabelpontes.com.br"/>
+//         </div>
+//       `
+// 	)
+// 	.join("");
 
-document.getElementsByClassName("gallery")[0].style.backgroundImage =
-	'url("./assets/0ce1753182ff5be953436c94907f88c2.jpg")';
+// document.getElementsByClassName("gallery")[0].style.backgroundImage =
+// 	'url("./assets/0ce1753182ff5be953436c94907f88c2.jpg")';
 
 function saiuCompletamenteDaTela(el) {
 	const r = el.getBoundingClientRect();
