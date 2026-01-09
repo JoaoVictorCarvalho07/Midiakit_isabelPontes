@@ -31,15 +31,125 @@ navLinks.forEach((link) => {
 	});
 });
 
+const names = ["1.png", "2.jpg", "3.png", "4.png", "5.jpg"];
 
-const names = [
-	"athena.jpg",
-	"cadaverbride.jpg",
-	"goth.png",
-	"horsewithnoname.png",
-	"kawai.png",
-];
+const criacarrosel = () => {
+	const gallery = document.querySelector(".gallery");
+	const track = gallery.querySelector(".carousel-track");
+	const dotsWrap = gallery.querySelector(".carousel-dots");
+	const btnPrev = gallery.querySelector(".c-btn.prev");
+	const btnNext = gallery.querySelector(".c-btn.next");
+	const viewport = gallery.querySelector(".carousel-viewport");
 
+	let index = 0;
+	let startX = 0;
+	let dragging = false;
+
+	// Render slides
+	track.innerHTML = names
+		.map(
+			(name) => `
+      <div class="carousel-slide">
+        <img src="./assets/fotos-fotografia/${name}" alt="isabelpontes.com.br" draggable="false"/>
+      </div>
+    `
+		)
+		.join("");
+
+	function getPerView() {
+		return window.matchMedia("(min-width: 640px)").matches ? 3 : 1;
+	}
+	// Render dots
+
+	function renderDots() {
+		const perView = getPerView();
+		const pages = Math.max(1, Math.ceil(names.length / perView));
+
+		dotsWrap.innerHTML = Array.from({ length: pages })
+			.map(
+				(_, i) =>
+					`<button class="carousel-dot ${
+						i === 0 ? "is-active" : ""
+					}" type="button" aria-label="Ir para página ${i + 1}"></button>`
+			)
+			.join("");
+
+		return Array.from(dotsWrap.querySelectorAll(".carousel-dot"));
+	}
+
+	let dots = renderDots();
+
+	function update() {
+		const perView = getPerView();
+		const pages = Math.max(1, Math.ceil(names.length / perView));
+
+		// clamp para não passar do fim (quando perView muda)
+		if (index > pages - 1) index = pages - 1;
+
+		// cada "page" anda 100%
+		track.style.transform = `translateX(${-index * 100}%)`;
+
+		dots.forEach((d, i) => d.classList.toggle("is-active", i === index));
+	}
+
+	function goTo(i) {
+		const perView = getPerView();
+		const pages = Math.max(1, Math.ceil(names.length / perView));
+
+		index = (i + pages) % pages;
+		update();
+	}
+
+	btnPrev.addEventListener("click", () => goTo(index - 1));
+	btnNext.addEventListener("click", () => goTo(index + 1));
+
+	dots.forEach((dot, i) => dot.addEventListener("click", () => goTo(i)));
+
+	// Teclado
+	window.addEventListener("keydown", (e) => {
+		if (e.key === "ArrowLeft") goTo(index - 1);
+		if (e.key === "ArrowRight") goTo(index + 1);
+	});
+
+	// Swipe (touch + mouse)
+	const onDown = (clientX) => {
+		dragging = true;
+		startX = clientX;
+	};
+
+	const onUp = (clientX) => {
+		if (!dragging) return;
+		dragging = false;
+		const diff = clientX - startX;
+
+		// threshold
+		if (Math.abs(diff) > 50) {
+			if (diff < 0) goTo(index + 1);
+			else goTo(index - 1);
+		}
+	};
+
+	viewport.addEventListener("touchstart", (e) => onDown(e.touches[0].clientX), {
+		passive: true,
+	});
+	viewport.addEventListener("touchend", (e) =>
+		onUp(e.changedTouches[0].clientX)
+	);
+
+	viewport.addEventListener("mousedown", (e) => onDown(e.clientX));
+	window.addEventListener("mouseup", (e) => onUp(e.clientX));
+	viewport.addEventListener("dragstart", (e) => e.preventDefault());
+
+	update();
+
+	window.addEventListener("resize", () => {
+		dots = renderDots();
+		dots.forEach((dot, i) => dot.addEventListener("click", () => goTo(i)));
+		update();
+	});
+};
+
+criacarrosel(names);
 document.getElementsByClassName("gallery-grid")[0].innerHTML = names
 	.map(
 		(name) => `
@@ -49,6 +159,7 @@ document.getElementsByClassName("gallery-grid")[0].innerHTML = names
       `
 	)
 	.join("");
+
 document.getElementsByClassName("gallery")[0].style.backgroundImage =
 	'url("./assets/0ce1753182ff5be953436c94907f88c2.jpg")';
 

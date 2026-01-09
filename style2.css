@@ -1110,7 +1110,7 @@ a {
 	background-color: var(--color-accent);
 }
 
-= .metrics {
+.metrics {
 	padding: clamp(24px, 5vw, 64px) 0;
 	overflow-x: clip; /* evita scroll horizontal por causa do celular “pra fora” */
 }
@@ -1476,14 +1476,137 @@ a {
 	object-fit: contain;
 }
 
+.gallery .text-center {
+	color: var(--color-bg-dark);
+	font-size: large;
+}
 .video-overlay {
 	z-index: 4;
 	position: absolute;
-	max-height: 90%; 
+	max-height: 90%;
 	inset: 0;
 	background: transparent;
 	border: 0;
 	padding: 0;
 	cursor: pointer;
 	touch-action: manipulation;
+}
+
+.gallery {
+	position: relative;
+	padding: 24px;
+	background-size: cover;
+	background-position: center;
+}
+
+.carousel {
+	position: relative;
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	gap: 12px;
+	align-items: center;
+}
+
+.carousel-viewport {
+	overflow: hidden;
+	border-radius: 18px;
+}
+
+.carousel-track {
+	display: flex;
+
+	transition: transform 350ms ease;
+	will-change: transform;
+	gap: 0;
+}
+
+.carousel-slide {
+	flex: 0 0 100%;
+	user-select: none;
+}
+
+.carousel-slide img {
+	width: 100%;
+	height: auto;
+	object-fit: contain; /* não corta */
+	background: #000; /* opcional */
+	display: block;
+	border-radius: 16px; /* opcional */
+}
+
+.c-btn {
+	width: 42px;
+	height: 42px;
+	border-radius: 999px;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	background: rgba(0, 0, 0, 0.35);
+	color: #fff;
+	font-size: 28px;
+	line-height: 1;
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+	backdrop-filter: blur(6px);
+}
+
+.c-btn:active {
+	transform: scale(0.98);
+}
+
+.carousel-dots {
+	margin-top: 12px;
+	display: flex;
+	justify-content: center;
+}
+
+.carousel-dot {
+	width: 9px;
+	height: 9px;
+	border-radius: 99px;
+	border: 1px solid rgb(255, 255, 255);
+	background: rgba(255, 255, 255, 0.25);
+	cursor: pointer;
+}
+
+.carousel-dot.is-active {
+	background: rgba(0, 0, 0, 0.95);
+}
+
+/* Mobile: botões menores */
+@media (min-width: 640px) {
+	.carousel-slide {
+		flex: 1 0 calc(100% / 3);
+	}
+}
+@media (max-width: 640px) {
+	.c-btn {
+		width: 36px;
+		height: 36px;
+		font-size: 24px;
+	}
+	.carousel-slide img {
+		height: auto;
+	}
+}
+
+@media (min-width: 640px) {
+	.carousel-slide img {
+		min-height: 260px;
+	}
+	.carousel-track {
+		gap: 16px;
+	}
+
+	.carousel-slide {
+		flex: 0 0 calc((100% - 32px) / 3); /* 2 gaps = 2*16px = 32px */
+		max-width: 30%;
+	}
+}
+
+.container-fotografia {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 18px;
+	color: var(--color-text-dark);
 }
