@@ -52,12 +52,9 @@ document.getElementsByClassName("gallery-grid")[0].innerHTML = names
 document.getElementsByClassName("gallery")[0].style.backgroundImage =
 	'url("./assets/0ce1753182ff5be953436c94907f88c2.jpg")';
 
-let videos = document.getElementsByClassName("video-thumb");
-
 function saiuCompletamenteDaTela(el) {
 	const r = el.getBoundingClientRect();
 	const vh = window.innerHeight || document.documentElement.clientHeight;
-	const vw = window.innerWidth || document.documentElement.clientWidth;
 
 	return (
 		r.bottom <= 0 || // saiu por cima
@@ -77,18 +74,22 @@ const obs = new IntersectionObserver(
 const pauseSeSaiu = (video) => {
 	window.addEventListener("scroll", () => {
 		if (saiuCompletamenteDaTela(video)) {
-			video.pause();
-		} else {
-			video.play();
+			video.muted = true;
 		}
 	});
 };
 
-for (let i = 0; i < videos.length; i++) {
-	let video = videos[i];
-	pauseSeSaiu(video);
-	console.log(obs.observe(video));
-}
+const observed = new WeakSet();
+
+const mo = new MutationObserver(() => {
+	const videos = videosContainer.querySelectorAll(".video-thumb");
+	videos.forEach((video) => {
+		if (observed.has(video)) return;
+		pauseSeSaiu(video);
+		obs.observe(video);
+		observed.add(video);
+	});
+});
 
 // videosInfoTemplate = {
 //     Videosrc:"",
@@ -125,62 +126,59 @@ const videosInfo = [
 ];
 
 const videosContainer = document.getElementsByClassName("video-grid")[0];
+const montarVideosMock = (videosInfo) => {
+	videosInfo.forEach((v) => {
+		if (v.Imagesrc) {
+			videosContainer.innerHTML += `
+				<div class="video-wrapper" >
+	    			<div class="phone-mockup">
+						<video
+						controls
+							class="video-thumb"
+							muted
+							autoplay
+							loop
+							playsinline
+							preload="metadata"
+							              controlslist=" play nodownload noremoteplayback"
 
-// videosInfo.forEach((v) => {
-// 	if (v.Imagesrc) {
-// 		videosContainer.innerHTML += `
-// 			<div class="video-wrapper" >
-//     			<div class="phone-mockup">
-// 					<video
-// 						tabindex="0"
-// 						id="${v.Videosrc}"
-// 						class="video-thumb"
-// 						muted
-// 						autoplay
-// 						loop
-// 						playsinline
-// 						preload="metadata"
-// 						controlslist="nodownload"
-// 					>
-// 						<source src="${v.Videosrc}" type="video/mp4" />
-// 					</video>
+						>
+							<source src="${v.Videosrc}" type="video/mp4" />
+						</video>
+	 					 <button class="video-overlay" type="button" aria-label="Ativar/desativar áudio"></button>
+					</div>
+					<img
+					src=${v.Imagesrc}
+					alt="Produto Câmera"
+					class="product-sticker "
+					/>
+	    			<div class="video-cat">${v.descricao.valueOf()}</div>
+	  			</div>`;
+		} else {
+			videosContainer.innerHTML += `
+				<div class="video-wrapper" >
+	    			<div class="phone-mockup">
+						<video
+							controls
+							class="video-thumb"
+							muted
+							autoplay
+							loop
+							playsinline
+							preload="metadata"
+							controlslist="nodownload"
+						>
+							<source src="${v.Videosrc}" type="video/mp4" />
+						</video>
+	 					 <button class="video-overlay" type="button" aria-label="Ativar/desativar áudio"></button>
+					</div>
+	    			<div class="video-cat">${v.descricao.valueOf()}</div>
+	  			</div>`;
+		}
+	});
 
-//  					 <button class="video-overlay" type="button" aria-label="Ativar/desativar áudio"></button>
-// 				</div>
-
-// 				<img
-// 				src=${v.Imagesrc}
-// 				alt="Produto Câmera"
-// 				class="product-sticker "
-// 				/>
-
-//     			<div class="video-cat">${v.descricao.valueOf()}</div>
-//   			</div>`;
-// 	} else {
-// 		videosContainer.innerHTML += `
-// 			<div class="video-wrapper" >
-//     			<div class="phone-mockup">
-// 					<video
-// 						tabindex="0"
-// 						id="${v.Videosrc}"
-// 						class="video-thumb"
-// 						muted
-// 						autoplay
-// 						loop
-// 						playsinline
-// 						preload="metadata"
-// 						controlslist="nodownload"
-// 					>
-// 						<source src="${v.Videosrc}" type="video/mp4" />
-// 					</video>
-
-//  					 <button class="video-overlay" type="button" aria-label="Ativar/desativar áudio"></button>
-// 				</div>
-
-//     			<div class="video-cat">${v.descricao.valueOf()}</div>
-//   			</div>`;
-// 	}
-// });
+	mo.observe(videosContainer, { childList: true, subtree: true });
+};
 
 // document.getElementsByClassName("video-thumb").forEach(e=>{
 //   console.log(e)
@@ -190,10 +188,33 @@ const videosContainer = document.getElementsByClassName("video-grid")[0];
 // })
 
 console.log(document.getElementsByClassName("video-thumb"));
-let videosList;
+
+function muteOthers(currentVideo) {
+	const all = videosContainer.querySelectorAll(".video-thumb");
+	all.forEach((v) => {
+		if (v !== currentVideo) {
+			v.muted = true;
+			v.dataset.unmuted = "0"; // marca como "não está com áudio"
+		}
+	});
+}
 
 document.addEventListener("DOMContentLoaded", () => {
-	videosList = document.getElementsByClassName("video-thumb");
+	mo.observe(videosContainer, { childList: true, subtree: true });
+
+	videosContainer.addEventListener(
+		"play",
+		(e) => {
+			const video = e.target;
+			if (!video.classList.contains("video-thumb")) return;
+
+			// Se esse vídeo estiver com áudio liberado, muta os outros
+			if (video.dataset.unmuted === "1" && !video.muted) {
+				muteOthers(video);
+			}
+		},
+		true // <- capture!
+	);
 	videosContainer.addEventListener("click", async (e) => {
 		const overlay = e.target.closest(".video-overlay");
 		if (!overlay) return;
@@ -202,24 +223,61 @@ document.addEventListener("DOMContentLoaded", () => {
 		const video = wrapper?.querySelector(".video-thumb");
 		if (!video) return;
 
+		// pega o card inteiro e o sticker
+		const card = overlay.closest(".video-wrapper");
+		const sticker = card?.querySelector(".product-sticker");
+
 		// 1º clique: só desmuta
 		if (video.dataset.unmuted !== "1") {
+			muteOthers(video);
 			video.muted = false;
 			video.volume = 1;
 			video.dataset.unmuted = "1";
+
+			if (sticker) {
+				sticker.style.display = "none";
+			}
 		} else {
-			// próximos cliques: toggle mute
+			// próxim os cliques: toggle mute
 			video.muted = !video.muted;
+			if (sticker) {
+				console.log("tem sticker", sticker);
+				if (sticker.style.display == "block") {
+					sticker.style.display = "none";
+				} else {
+					sticker.style.display = "block";
+				}
+			}
+			video.onpaused = () => {
+				if (sticker) {
+					console.log("tem sticker", sticker);
+					sticker.style.display = "block";
+				}
+			};
 		}
 
 		// garante que continua tocando (se algum browser pausar)
 		try {
 			await video.play();
+			video.onpaused = async () => {
+				try {
+					video.muted = true;
+					sticker.style.display = "block";
+				} catch (err) {
+					console.warn("play() falhou:", err);
+				}
+			};
+			video.onplay = () => {
+				try {
+					video.muted = false;
+					sticker.style.display = "none";
+				} catch (err) {
+					console.warn("play() falhou:", err);
+				}
+			};
 		} catch (err) {
 			console.warn("play() falhou:", err);
 		}
-
-		document.get;
 	});
 });
 //WhatsApp (Solicitar)
@@ -289,10 +347,6 @@ const STICKERS_FOLDER = `${BASE}/stickers`;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const { data, error } = await supabase.storage.from(BUCKET).list("videos-ugc");
-console.log("videos-ugc error:", error);
-console.log("videos-ugc data:", data);
-
 // Helpers
 const stripExt = (name) => name.replace(/\.[^/.]+$/, ""); // remove extensão
 const isVideo = (name) => /\.(mp4|webm|mov)$/i.test(name);
@@ -318,6 +372,13 @@ async function listFolder(folder) {
 	return data || [];
 }
 
+async function fetchLabels() {
+	const response = await fetch("./labels.json");
+	const data = await response.json();
+	console.log("data", data[""]);
+	return data;
+}
+
 async function montarVideosInfo() {
 	// A) lista vídeos e sticker
 
@@ -337,11 +398,17 @@ async function montarVideosInfo() {
 		});
 
 	// C) monta array dos vídeos, e tenta achar sticker com mesmo nome
+
+	const labels = await fetchLabels();
+
 	const videosInfo = videosList
+
 		.filter((f) => isVideo(f.name))
 		.map((f) => {
 			const baseName = stripExt(f.name);
 			const key = baseName.toLowerCase();
+
+			console.log("key", key);
 
 			const videoPath = `${VIDEOS_FOLDER}/${f.name}`;
 			const videoUrl = publicUrl(videoPath);
@@ -349,15 +416,13 @@ async function montarVideosInfo() {
 
 			const stickerUrl = stickerMap.get(key) || ""; // se não tiver sticker, fica vazio
 
-			console.log(videoPath);
 			return {
 				Videosrc: videoUrl,
 				Imagesrc: stickerUrl,
-				descricao: formatDescricao(baseName), // título = nome do arquivo sem extensão
+				descricao: labels[key] || formatDescricao(baseName), // título = nome do arquivo sem extensão
 			};
 		});
 
-	console.log(videosInfo);
 	return videosInfo;
 }
 
@@ -373,15 +438,15 @@ function renderVideos(videosInfo) {
         <div class="video-wrapper">
           <div class="phone-mockup">
             <video
-              tabindex="0"
               id="${v.Videosrc}"
               class="video-thumb"
+			  controls
               muted
               autoplay
               loop
               playsinline
               preload="metadata"
-              controlslist="nodownload"
+              controlslist="nodownload "
             >
               <source src="${v.Videosrc}" type="video/mp4" />
             </video>
@@ -401,9 +466,8 @@ function renderVideos(videosInfo) {
         <div class="video-wrapper">
           <div class="phone-mockup">
             <video
-              tabindex="0"
-              id="${v.Videosrc}"
               class="video-thumb"
+			  controls
               muted
               autoplay
               loop
@@ -426,6 +490,7 @@ function renderVideos(videosInfo) {
 try {
 	const videosInfo = await montarVideosInfo();
 	renderVideos(videosInfo);
+	// montarVideosMock(videosInfo);
 } catch (err) {
 	console.log("asçdlas");
 	videosContainer.innerHTML = "<p>Erro ao carregar vídeos do Supabase.</p>";
