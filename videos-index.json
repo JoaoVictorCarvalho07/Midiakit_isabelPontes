@@ -1,0 +1,27 @@
+{
+	"BELEZA": [
+        "Loreal.mp4",
+        "Dove.mp4",
+        "Pantene.mp4",
+        "Maquiagem.mp4"
+    ],
+	"EVENTOS": [
+		"Natura_yoga.mp4",
+		"Mercado%20Livre.mp4",
+		"Top%20Girls%20Experience.mp4"
+	],
+	"FITNESS": [
+        "Probiotica.mp4",
+         "Crossfit.mp4"
+        ],
+
+	"GASTRONOMIA": [
+        "Cafe_onirico.mp4"
+    ],
+	"MODA": [
+        "Pe_de_algodao.mp4"
+    ],
+	"SAUDE": [
+        "Redoxon.mp4"
+    ]
+}

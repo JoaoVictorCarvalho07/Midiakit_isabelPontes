@@ -80,6 +80,10 @@ a {
 	margin: 0 auto;
 	padding: 0 20px;
 }
+.container h2 {
+	max-width: 100%;
+	overflow-wrap: break-word;
+}
 .text-center {
 	text-align: center;
 }
@@ -656,6 +660,10 @@ a {
 /* (mantive o comportamento original: força textos pretos no bloco) */
 .passo-a-passo :where(p, button, div, span, li) {
 	color: var(--muted);
+	max-width: 100%;
+}
+.passo-a-passo .pill {
+	overflow: hidden;
 }
 
 .passo-a-passo .wrap {
@@ -1017,8 +1025,8 @@ a {
 		text-align: center;
 	}
 	.bio-img img {
-		max-width: 300px;
 		display: inline-block;
+		width: auto;
 	}
 	.section-title {
 		font-size: 2rem;
@@ -1636,6 +1644,7 @@ a {
 	justify-content: center;
 	align-items: center;
 	font-size: larger;
+	padding-bottom: 3%;
 }
 .videos-section {
 	padding: 80px 0 0 0;
@@ -1669,7 +1678,6 @@ a {
 	width: 35%;
 	right: 0;
 }
-<<<<<<< HEAD
 
 @media (min-width: 640px) {
 	.carousel-slide img {
@@ -1692,5 +1700,3 @@ a {
 	gap: 18px;
 	color: var(--color-text-dark);
 }
-=======
->>>>>>> videosgrid_sm

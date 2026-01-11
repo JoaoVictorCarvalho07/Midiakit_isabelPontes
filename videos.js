@@ -1,118 +1,24 @@
-// =============================
-// 0) SUPABASE + LABELS
-// =============================
+const R2_BASE = "https://pub-654a4f08d4484a208ef830ad56bc2806.r2.dev";
+const BASE_PATH = "videos-ugc"; // pasta raiz no R2
+const STICKERS_LOCAL = "./assets/videos/stickers"; // no github
 
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-// 1) Infos do Supabase
-const SUPABASE_URL = "https://nmfkmufwouerecckdtfw.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_zwJ2fxBdBcfWumfvHEPOEg_okEQs9tP";
-
-// 2) Bucket e base (pastas)
-const BUCKET = "bebels file"; // exatamente assim
-const BASE = "videos-ugc"; // dentro do bucket
-
-// 3) Cria client (supabase-js já deve estar carregado no HTML)
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// container onde vai renderizar (ajuste para o seu id/classe)
 const videosContainer = document.getElementsByClassName("videos-container")[0];
-// Helpers
+
 const stripExt = (name) => name.replace(/\.[^/.]+$/, "");
-const isVideo = (name) => /\.(mp4|webm|mov|m4v)$/i.test(name);
+const formatFromSlug = (slug) => slug.replaceAll("_", " ");
+const toFolderSlug = (cat) => cat.toLowerCase(); // BELEZA -> beleza
 
-// URL pública do arquivo no bucket
-function publicUrl(path) {
-	const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
-	return data.publicUrl;
-}
-
-// Lista arquivos/pastas de um folder (1 nível)
-async function listFolder(folder) {
-	const { data, error } = await supabase.storage.from(BUCKET).list(folder, {
-		limit: 1000,
-		offset: 0,
-		sortBy: { column: "name", order: "asc" },
-	});
-
-	if (error) throw error;
-	return data || [];
-}
-
-// Labels (opcional): slug -> "Título bonitinho"
-async function fetchLabels() {
+async function fetchJson(path, fallback = {}) {
 	try {
-		const response = await fetch("./labels.json");
-		if (!response.ok) return {};
-		return await response.json();
+		const r = await fetch(path);
+		if (!r.ok) return fallback;
+		return await r.json();
 	} catch {
-		return {};
+		return fallback;
 	}
 }
 
-function formatDescricaoFromSlug(slug) {
-	return slug.replaceAll("_", " ");
-}
-
-function formatCategoryTitle(cat) {
-	// Ex: "beleza" -> "BELEZA" (mude se quiser Title Case)
-	return cat.toUpperCase();
-}
-
-// =============================
-// 1) MONTA VIDEOS POR CATEGORIAS (pastas)
-// Estrutura esperada:
-// videos-ugc/
-//   beleza/  -> mp4s
-//   food/    -> mp4s
-//   etc...
-//
-// Stickers: LOCAL
-// ./assets/videos/stickers/<slug>.png
-// (se não existir, some automaticamente via onerror)
-// =============================
-async function montarVideosInfoPorCategorias(labels) {
-	const baseItems = await listFolder(BASE);
-
-	// No storage, pastas aparecem como itens com name; vamos tentar tratar como categoria
-	// (Se você tiver arquivos soltos na BASE, eles serão ignorados pelo filtro)
-	const categories = baseItems.map((x) => x.name).filter(Boolean);
-
-	const all = [];
-
-	for (const cat of categories) {
-		const folder = `${BASE}/${cat}`;
-		const files = await listFolder(folder);
-
-		files
-			.filter((f) => f?.name && isVideo(f.name))
-			.forEach((f) => {
-				const baseName = stripExt(f.name);
-				const slug = baseName.toLowerCase(); // id técnico
-
-				const videoPath = `${folder}/${f.name}`;
-				const videoUrl = publicUrl(videoPath);
-
-				// sticker local (se não existir: removemos no onerror do img)
-				const stickerLocal = `./assets/videos/stickers/${slug}.png`;
-
-				all.push({
-					category: formatCategoryTitle(cat),
-					Videosrc: videoUrl,
-					Imagesrc: stickerLocal,
-					descricao: labels[slug] || formatDescricaoFromSlug(slug),
-				});
-			});
-	}
-
-	return all;
-}
-
-// =============================
-// 2) RENDER POR CATEGORIA
-// =============================
 function renderCard(v) {
-	// img com onerror remove se não existir
 	const sticker = v.Imagesrc
 		? `<img src="${v.Imagesrc}" alt="Sticker do produto" class="product-sticker" onerror="this.remove()" />`
 		: "";
@@ -120,22 +26,13 @@ function renderCard(v) {
 	return `
     <div class="video-wrapper" data-category="${v.category}">
       <div class="phone-mockup">
-        <video
-          class="video-thumb"
-          muted
-          autoplay
-          loop
-          playsinline
-          preload="metadata"
-          controls
-          controlslist="nodownload"
-        >
+        <video class="video-thumb"
+          muted autoplay loop playsinline preload="metadata"
+          controls controlslist="nodownload">
           <source src="${v.Videosrc}" type="video/mp4" />
         </video>
-
         <button class="video-overlay" type="button" aria-label="Ativar/desativar áudio"></button>
       </div>
-
       ${sticker}
       <div class="video-cat">${v.descricao}</div>
     </div>
@@ -143,7 +40,6 @@ function renderCard(v) {
 }
 
 function renderVideosPorCategoria(videosInfo) {
-	// agrupa por categoria
 	const groups = videosInfo.reduce((acc, v) => {
 		(acc[v.category] ||= []).push(v);
 		return acc;
@@ -151,32 +47,30 @@ function renderVideosPorCategoria(videosInfo) {
 
 	videosContainer.innerHTML = Object.entries(groups)
 		.map(
-			([cat, items]) => `
+			([cat, items]) => 
+	`
       <section class="videos-section">
-      <div>
-   <p class="trasso"></p>
-</div>
+
+      	<div>
+   			<p class="trasso"></p>
+		</div>
+
         <div class="center">        
             <h2 class="videos-title">${cat}</h2>
         </div>
         
         <div class="video-grid">
-        
           ${items.map(renderCard).join("")}
         </div>
+		
       </section>
-    `
+	`
 		)
 		.join("");
 }
 
-// =============================
-// 3) OVERLAY: 1º clique desmuta, esconde sticker e depois remove overlay
-//    + regra: se 1 vídeo desmutar, os outros mutam
-// =============================
 function muteOthers(currentVideo) {
-	const all = videosContainer.querySelectorAll(".video-thumb");
-	all.forEach((v) => {
+	videosContainer.querySelectorAll(".video-thumb").forEach((v) => {
 		if (v !== currentVideo) {
 			v.muted = true;
 			v.dataset.unmuted = "0";
@@ -194,10 +88,8 @@ function setupOverlayClick() {
 		const sticker = card?.querySelector(".product-sticker");
 		if (!video) return;
 
-		// 1º clique: libera áudio e "deixa normal" (removendo overlay)
 		if (video.dataset.unmuted !== "1") {
 			muteOthers(video);
-
 			video.muted = false;
 			video.volume = 1;
 			video.dataset.unmuted = "1";
@@ -213,60 +105,62 @@ function setupOverlayClick() {
 	});
 }
 
-// =============================
-// 4) PAUSAR QUANDO SAI DA TELA (IntersectionObserver)
-// (root: null = viewport da página; se seu scroll for num container, me avise)
-// =============================
+// Pausar quando sai da tela
 const observed = new WeakSet();
-
 const obs = new IntersectionObserver(
 	(entries) => {
 		entries.forEach((entry) => {
 			const video = entry.target;
-			if (!video) return;
-
 			if (!entry.isIntersecting) {
 				video.pause();
 				video.muted = true;
 				video.dataset.unmuted = "0";
-			} else {
-				// opcional: retomar autoplay quando entrar
-				// video.play().catch(()=>{});
 			}
 		});
 	},
 	{ threshold: 0.35 }
 );
 
-function observarVideosNovos() {
+function observarVideos() {
 	const videos = videosContainer.querySelectorAll(".video-thumb");
-	videos.forEach((video) => {
-		if (observed.has(video)) return;
-		obs.observe(video);
-		observed.add(video);
+	videos.forEach((v) => {
+		if (observed.has(v)) return;
+		obs.observe(v);
+		observed.add(v);
 	});
 }
+
+document.addEventListener("DOMContentLoaded", async () => {
+	const labels = await fetchJson("./labels.json", {});
+	const index = await fetchJson("./videos-index.json", {});
+	console.log("Vídeos index:", index);
+	// monta lista a partir do index
+	const videosInfo = [];
+
+	for (const [category, files] of Object.entries(index)) {
+		const folder = toFolderSlug(category);
+
+		for (const file of files) {
+			const slug = stripExt(file).toLowerCase();
+			const title = labels[slug] || formatFromSlug(slug);
+
+			videosInfo.push({
+				category,
+				Videosrc: `${R2_BASE}/${BASE_PATH}/${folder}/${file}`,
+				Imagesrc: `${STICKERS_LOCAL}/${slug}.png`,
+				descricao: title,
+			});
+		}
+	}
+
+	renderVideosPorCategoria(videosInfo);
+	setupOverlayClick();
+	observarVideos();
+});
 
 // =============================
 // 5) INIT
 // =============================
-document.addEventListener("DOMContentLoaded", async () => {
-	try {
-		const labels = await fetchLabels();
-
-		const videosInfo = await montarVideosInfoPorCategorias(labels);
-
-		renderVideosPorCategoria(videosInfo);
-
-		setupOverlayClick();
-		observarVideosNovos();
-	} catch (err) {
-		console.error(err);
-		if (videosContainer) {
-			videosContainer.innerHTML = `<p style="padding:16px">Não foi possível carregar os vídeos. Verifique permissões/pastas do Supabase.</p>`;
-		}
-	}
-});
 
 document.addEventListener("DOMContentLoaded", () => {
 	obs.observe(videosContainer, { childList: true, subtree: true });
