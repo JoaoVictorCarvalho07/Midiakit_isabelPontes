@@ -369,6 +369,7 @@ a {
 	padding: 2rem 0;
 	margin-top: 40px;
 }
+
 .video-wrapper {
 	position: relative;
 	display: flex;
@@ -378,7 +379,7 @@ a {
 .phone-mockup {
 	z-index: 1;
 	position: relative;
-	width: 100%;
+	width: 10;
 	max-width: 280px;
 	aspect-ratio: 9/16;
 	border-radius: 24px;
@@ -1587,6 +1588,67 @@ a {
 	.carousel-slide img {
 		height: auto;
 	}
+}
+
+@media (min-width: 640px) {
+	.carousel-slide img {
+		min-height: 260px;
+	}
+	.carousel-track {
+		gap: 16px;
+	}
+
+	.carousel-slide {
+		flex: 0 0 calc((100% - 32px) / 3); /* 2 gaps = 2*16px = 32px */
+		max-width: 30%;
+	}
+}
+
+.container-fotografia {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 18px;
+	color: var(--color-text-dark);
+}
+
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: larger;
+}
+.videos-section {
+	padding: 80px 0 0 0;
+	background-color: var(--color-bg-dark);
+	color: var(--color-text-light);
+}
+
+/* tirei o underline do "a" apenas para exemplificar no resultado*/
+a {
+	text-decoration: none;
+}
+
+.trasso {
+	position: relative;
+}
+
+.trasso::before,
+.trasso::after {
+	content: "";
+	border-bottom: 2px solid rgb(104, 64, 41);
+	position: absolute;
+	top: 100%;
+}
+
+.trasso::before {
+	width: 35%;
+	left: 0;
+}
+
+.trasso::after {
+	width: 35%;
+	right: 0;
 }
 
 @media (min-width: 640px) {
