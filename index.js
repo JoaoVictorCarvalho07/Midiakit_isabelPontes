@@ -208,88 +208,7 @@ const mo = new MutationObserver(() => {
 //     descricao:""
 //     }
 
-const videosInfo = [
-	{
-		Videosrc: "./videosS/whayyyytheydontloveyoulikeiloveu.mp4",
-		Imagesrc: "assets/videos/stickers/whey.png",
-		descricao: "Probiotica",
-	},
-	{
-		Videosrc: "./videosS/redoxon.mp4",
-		Imagesrc: "./assets/videos/stickers/redoxonpng.png",
-		descricao: "Redoxon",
-	},
-	{
-		Videosrc: "./videosS/cafeOnirico.mp4",
-		Imagesrc: "",
-		descricao: "Café onirico",
-	},
-	{
-		Videosrc: "./videoS/ginoCanisten.mp4",
-		Imagesrc: "./assets/videos/stickers/ginocanisten.png",
-		descricao: "Ginocanisten",
-	},
-	{
-		Videosrc: "./videoS/Lorealprotetorsolar.mp4",
-		Imagesrc: "assets/videos/stickers/solar-expertise-efeito-20-1.webp",
-		descricao: "Loreal",
-	},
-];
 
-const videosContainer = document.getElementsByClassName("video-grid")[0];
-const montarVideosMock = (videosInfo) => {
-	videosInfo.forEach((v) => {
-		if (v.Imagesrc) {
-			videosContainer.innerHTML += `
-				<div class="video-wrapper" >
-	    			<div class="phone-mockup">
-						<video
-						controls
-							class="video-thumb"
-							muted
-							autoplay
-							loop
-							playsinline
-							preload="metadata"
-							              controlslist=" play nodownload noremoteplayback"
-
-						>
-							<source src="${v.Videosrc}" type="video/mp4" />
-						</video>
-	 					 <button class="video-overlay" type="button" aria-label="Ativar/desativar áudio"></button>
-					</div>
-					<img
-					src=${v.Imagesrc}
-					alt="Produto Câmera"
-					class="product-sticker "
-					/>
-	    			<div class="video-cat">${v.descricao.valueOf()}</div>
-	  			</div>`;
-		} else {
-			videosContainer.innerHTML += `
-				<div class="video-wrapper" >
-	    			<div class="phone-mockup">
-						<video
-							controls
-							class="video-thumb"
-							muted
-							autoplay
-							loop
-							playsinline
-							preload="metadata"
-							controlslist="nodownload"
-						>
-							<source src="${v.Videosrc}" type="video/mp4" />
-						</video>
-	 					 <button class="video-overlay" type="button" aria-label="Ativar/desativar áudio"></button>
-					</div>
-	    			<div class="video-cat">${v.descricao.valueOf()}</div>
-	  			</div>`;
-		}
-	});
-
-	mo.observe(videosContainer, { childList: true, subtree: true });
-};
 
 // document.getElementsByClassName("video-thumb").forEach(e=>{
 //   console.log(e)
@@ -298,99 +217,18 @@ const montarVideosMock = (videosInfo) => {
 //   })
 // })
 
-console.log(document.getElementsByClassName("video-thumb"));
 
-function muteOthers(currentVideo) {
-	const all = videosContainer.querySelectorAll(".video-thumb");
-	all.forEach((v) => {
-		if (v !== currentVideo) {
-			v.muted = true;
-			v.dataset.unmuted = "0"; // marca como "não está com áudio"
-		}
-	});
-}
+// function muteOthers(currentVideo) {
+// 	const all = videosContainer.querySelectorAll(".video-thumb");
+// 	all.forEach((v) => {
+// 		if (v !== currentVideo) {
+// 			v.muted = true;
+// 			v.dataset.unmuted = "0"; // marca como "não está com áudio"
+// 		}
+// 	});
+// }
 
-document.addEventListener("DOMContentLoaded", () => {
-	mo.observe(videosContainer, { childList: true, subtree: true });
 
-	videosContainer.addEventListener(
-		"play",
-		(e) => {
-			const video = e.target;
-			if (!video.classList.contains("video-thumb")) return;
-
-			// Se esse vídeo estiver com áudio liberado, muta os outros
-			if (video.dataset.unmuted === "1" && !video.muted) {
-				muteOthers(video);
-			}
-		},
-		true // <- capture!
-	);
-	videosContainer.addEventListener("click", async (e) => {
-		const overlay = e.target.closest(".video-overlay");
-		if (!overlay) return;
-
-		const wrapper = overlay.closest(".phone-mockup");
-		const video = wrapper?.querySelector(".video-thumb");
-		if (!video) return;
-
-		// pega o card inteiro e o sticker
-		const card = overlay.closest(".video-wrapper");
-		const sticker = card?.querySelector(".product-sticker");
-
-		// 1º clique: só desmuta
-		if (video.dataset.unmuted !== "1") {
-			muteOthers(video);
-			video.muted = false;
-			video.volume = 1;
-			video.dataset.unmuted = "1";
-
-			if (sticker) {
-				sticker.style.display = "none";
-			}
-		} else {
-			// próxim os cliques: toggle mute
-			video.muted = !video.muted;
-			if (sticker) {
-				console.log("tem sticker", sticker);
-				if (sticker.style.display == "block") {
-					sticker.style.display = "none";
-				} else {
-					sticker.style.display = "block";
-				}
-			}
-			video.onpaused = () => {
-				if (sticker) {
-					console.log("tem sticker", sticker);
-					sticker.style.display = "block";
-				}
-			};
-		}
-
-		// garante que continua tocando (se algum browser pausar)
-		try {
-			await video.play();
-			video.onpaused = async () => {
-				try {
-					video.muted = true;
-					sticker.style.display = "block";
-				} catch (err) {
-					console.warn("play() falhou:", err);
-				}
-			};
-			video.onplay = () => {
-				try {
-					video.muted = false;
-					sticker.style.display = "none";
-				} catch (err) {
-					console.warn("play() falhou:", err);
-				}
-			};
-		} catch (err) {
-			console.warn("play() falhou:", err);
-		}
-	});
-});
 //WhatsApp (Solicitar)
 const WHATSAPP_PHONE = "41991977011";
 
@@ -442,167 +280,276 @@ document.addEventListener("click", (e) => {
 	openWhatsApp(message);
 });
 
-//videos supabase
+// //videos supabase
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-// 1) Suas infos do Supabase
-const SUPABASE_URL = "https://nmfkmufwouerecckdtfw.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_zwJ2fxBdBcfWumfvHEPOEg_okEQs9tP";
+// ///////////////////////////////
 
-// 2) Bucket e paths
-const BUCKET = "bebels file"; // exatamente assim, com espaço
-const BASE = "videos-ugc";
-const VIDEOS_FOLDER = `${BASE}/videos`;
-const STICKERS_FOLDER = `${BASE}/stickers`;
+// async function listFolder(path) {
+// 	const { data, error } = await supabase.storage
+// 		.from(BUCKET)
+// 		.list(path, { limit: 1000 });
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// 	if (error) throw error;
+// 	return data ?? [];
+// }
 
-// Helpers
-const stripExt = (name) => name.replace(/\.[^/.]+$/, ""); // remove extensão
-const isVideo = (name) => /\.(mp4|webm|mov)$/i.test(name);
-const isImage = (name) => /\.(png|webp|jpg|jpeg|gif)$/i.test(name);
+// async function getCategories(basePath) {
+// 	const items = await listFolder(basePath);
+// 	// pastas vêm como itens com name e (normalmente) metadata null + id etc.
+// 	// A forma mais segura é: tentar listar dentro e ver se retorna algo.
+// 	return items.map((x) => x.name).filter(Boolean);
+// }
 
-function publicUrl(path) {
-	const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
-	console.log("data");
-	return data.publicUrl;
-}
+// function stripExt(name) {
+// 	return name.replace(/\.[^/.]+$/, "");
+// }
 
-// 3) Lista arquivos de uma pasta (1 nível)
-async function listFolder(folder) {
-	const { data, error } = await supabase.storage.from(BUCKET).list(folder, {
-		limit: 1000,
-		offset: 0,
-		sortBy: { column: "name", order: "asc" },
-	});
+// function titleFromSlug(slug) {
+// 	return slug.replaceAll("_", " "); // depois você pode melhorar com labels.json
+// }
 
-	console.log(data);
+// async function montarVideosInfoPorCategorias() {
+// 	const categoriesList = await listFolder(BASE);
 
-	if (error) throw error;
-	return data || [];
-}
+// 	// pega só "pastas" (no storage, pasta normalmente não tem metadata/mimetype)
+// 	const categories = categoriesList.map((x) => x.name).filter(Boolean);
 
-async function fetchLabels() {
-	const response = await fetch("./labels.json");
-	const data = await response.json();
-	console.log("data", data[""]);
-	return data;
-}
+// 	const all = [];
 
-async function montarVideosInfo() {
-	// A) lista vídeos e sticker
+// 	for (const cat of categories) {
+// 		const folder = `${BASE}/${cat}`;
+// 		const files = await listFolder(folder);
 
-	const [videosList, stickersList] = await Promise.all([
-		listFolder(VIDEOS_FOLDER),
-		listFolder(STICKERS_FOLDER),
-	]);
+// 		files
+// 			.filter((f) => f?.name && isVideo(f.name))
+// 			.forEach((f) => {
+// 				const baseName = stripExt(f.name);
+// 				const key = baseName.toLowerCase();
 
-	// B) cria um mapa: "titulo" -> url do sticker
-	const stickerMap = new Map();
-	stickersList
-		.filter((f) => isImage(f.name))
-		.forEach((f) => {
-			const key = stripExt(f.name).toLowerCase();
-			const path = `${STICKERS_FOLDER}/${f.name}`;
-			stickerMap.set(key, publicUrl(path));
-		});
+// 				const videoPath = `${folder}/${f.name}`;
+// 				const videoUrl = publicUrl(videoPath);
 
-	// C) monta array dos vídeos, e tenta achar sticker com mesmo nome
+// 				const formatDescricao = (name) => stripExt(name).replaceAll("_", " ");
 
-	const labels = await fetchLabels();
+// 				// ✅ sticker local (padroniza nome do sticker = slug do vídeo)
+// 				const stickerLocal = `./assets/videos/stickers/${key}.png`; // ou .webp
 
-	const videosInfo = videosList
+// 				all.push({
+// 					category: cat.toUpperCase(), // ou cat como está
+// 					Videosrc: videoUrl,
+// 					Imagesrc: stickerLocal, // se não existir localmente, vai quebrar a imagem (dá pra tratar)
+// 					descricao: labels[key] || formatDescricao(baseName),
+// 				});
+// 			});
+// 	}
 
-		.filter((f) => isVideo(f.name))
-		.map((f) => {
-			const baseName = stripExt(f.name);
-			const key = baseName.toLowerCase();
+// 	return all;
+// }
 
-			console.log("key", key);
+// function groupByCategory(items) {
+// 	return items.reduce((acc, v) => {
+// 		(acc[v.category] ||= []).push(v);
+// 		return acc;
+// 	}, {});
+// }
 
-			const videoPath = `${VIDEOS_FOLDER}/${f.name}`;
-			const videoUrl = publicUrl(videoPath);
-			const formatDescricao = (name) => stripExt(name).replaceAll("_", " ");
+// function renderVideosPorCategoria(videosInfo) {
+// 	const groups = videosInfo.reduce((acc, v) => {
+// 		(acc[v.category] ||= []).push(v);
+// 		return acc;
+// 	}, {});
 
-			const stickerUrl = stickerMap.get(key) || ""; // se não tiver sticker, fica vazio
+// 	videosContainer.innerHTML = Object.entries(groups)
+// 		.map(
+// 			([cat, items]) => `
+//       <section class="videos-section">
+//         <h2 class="videos-title">${cat}</h2>
+//         <div class="videos-grid">
+//           ${items.map(renderCard).join("")}
+//         </div>
+//       </section>
+//     `
+// 		)
+// 		.join("");
+// }
 
-			return {
-				Videosrc: videoUrl,
-				Imagesrc: stickerUrl,
-				descricao: labels[key] || formatDescricao(baseName), // título = nome do arquivo sem extensão
-			};
-		});
+// function renderCard(v) {
+// 	const sticker = v.Imagesrc
+// 		? `<img src="${v.Imagesrc}" alt="Sticker do produto" class="product-sticker" onerror="this.remove()" />`
+// 		: "";
 
-	return videosInfo;
-}
+// 	return `
+//     <div class="video-wrapper">
+//       <div class="phone-mockup">
+//         <video class="video-thumb" muted autoplay loop playsinline preload="metadata" controls controlslist="nodownload">
+//           <source src="${v.Videosrc}" type="video/mp4" />
+//         </video>
+//         <button class="video-overlay" type="button" aria-label="Ativar/desativar áudio"></button>
+//       </div>
+//       ${sticker}
+//       <div class="video-cat">${v.descricao}</div>
+//     </div>
+//   `;
+// }
 
-// ====== AQUI você encaixa seu render ======
-// const videosContainer = document.getElementById("videosContainer");
+// //////////////////////////////
 
-function renderVideos(videosInfo) {
-	videosContainer.innerHTML = "";
+// // 1) Suas infos do Supabase
 
-	videosInfo.forEach((v) => {
-		if (v.Imagesrc) {
-			videosContainer.innerHTML += `   
-        <div class="video-wrapper">
-          <div class="phone-mockup">
-            <video
-              id="${v.Videosrc}"
-              class="video-thumb"
-			  controls
-              muted
-              autoplay
-              loop
-              playsinline
-              preload="metadata"
-              controlslist="nodownload "
-            >
-              <source src="${v.Videosrc}" type="video/mp4" />
-            </video>
-            <button class="video-overlay" type="button" aria-label="Ativar/desativar áudio"></button>
-          </div>
+// const SUPABASE_URL = "https://nmfkmufwouerecckdtfw.supabase.co";
+// const SUPABASE_ANON_KEY = "sb_publishable_zwJ2fxBdBcfWumfvHEPOEg_okEQs9tP";
 
-          <img 
-            src="${v.Imagesrc}"
-            alt="Sticker do produto"
-            class="product-sticker"
-          />
+// // 2) Bucket e paths
+// const BUCKET = "bebels file"; // exatamente assim, com espaço
+// const BASE = "videos-ugc";
+// // const VIDEOS_FOLDER = `${BASE}/videos`;
+// // const STICKERS_FOLDER = `${BASE}/stickers`;
 
-          <div class="video-cat">${v.descricao}</div>
-        </div>`;
-		} else {
-			videosContainer.innerHTML += `   
-        <div class="video-wrapper">
-          <div class="phone-mockup">
-            <video
-              class="video-thumb"
-			  controls
-              muted
-              autoplay
-              loop
-              playsinline
-              preload="metadata"
-              controlslist="nodownload"
-            >
-              <source src="${v.Videosrc}" type="video/mp4" />
-            </video>
-            <button class="video-overlay" type="button" aria-label="Ativar/desativar áudio"></button>
-          </div>
+// const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-          <div class="video-cat">${v.descricao}</div>
-        </div>`;
-		}
-	});
-}
+// // Helpers
+// const isVideo = (name) => /\.(mp4|webm|mov)$/i.test(name);
 
-// init
-try {
-	const videosInfo = await montarVideosInfo();
-	renderVideos(videosInfo);
-	// montarVideosMock(videosInfo);
-} catch (err) {
-	console.log("asçdlas");
-	videosContainer.innerHTML = "<p>Erro ao carregar vídeos do Supabase.</p>";
-}
+// function publicUrl(path) {
+// 	const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
+// 	return data.publicUrl;
+// }
+
+// // // 3) Lista arquivos de uma pasta (1 nível)
+// // async function listFolder(folder) {
+// // 	const { data, error } = await supabase.storage.from(BUCKET).list(folder, {
+// // 		limit: 1000,
+// // 		offset: 0,
+// // 		sortBy: { column: "name", order: "asc" },
+// // 	});
+
+// // 	console.log(data);
+
+// // 	if (error) throw error;
+// // 	return data || [];
+// // }
+
+// // async function fetchLabels() {
+// // 	const response = await fetch("./labels.json");
+// // 	const data = await response.json();
+// // 	console.log("data", data[""]);
+// // 	return data;
+// // }
+
+// // async function montarVideosInfo() {
+// // 	// A) lista vídeos e sticker
+
+// // 	const [videosList, stickersList] = await Promise.all([
+// // 		listFolder(VIDEOS_FOLDER),
+// // 		listFolder(STICKERS_FOLDER),
+// // 	]);
+
+// // 	// B) cria um mapa: "titulo" -> url do sticker
+// // 	const stickerMap = new Map();
+// // 	stickersList
+// // 		.filter((f) => isImage(f.name))
+// // 		.forEach((f) => {
+// // 			const key = stripExt(f.name).toLowerCase();
+// // 			const path = `${STICKERS_FOLDER}/${f.name}`;
+// // 			stickerMap.set(key, publicUrl(path));
+// // 		});
+
+// // 	// C) monta array dos vídeos, e tenta achar sticker com mesmo nome
+
+// // 	const labels = await fetchLabels();
+
+// // 	const videosInfo = videosList
+
+// // 		.filter((f) => isVideo(f.name))
+// // 		.map((f) => {
+// // 			const baseName = stripExt(f.name);
+// // 			const key = baseName.toLowerCase();
+
+// // 			console.log("key", key);
+
+// // 			const videoPath = `${VIDEOS_FOLDER}/${f.name}`;
+// // 			const videoUrl = publicUrl(videoPath);
+// // 			const formatDescricao = (name) => stripExt(name).replaceAll("_", " ");
+
+// // 			const stickerUrl = stickerMap.get(key) || ""; // se não tiver sticker, fica vazio
+
+// // 			return {
+// // 				Videosrc: videoUrl,
+// // 				Imagesrc: stickerUrl,
+// // 				descricao: labels[key] || formatDescricao(baseName), // título = nome do arquivo sem extensão
+// // 			};
+// // 		});
+
+// // 	return videosInfo;
+// // }
+
+// // // ====== AQUI você encaixa seu render ======
+// // // const videosContainer = document.getElementById("videosContainer");
+
+// // function renderVideos(videosInfo) {
+// // 	videosContainer.innerHTML = "";
+
+// // 	videosInfo.forEach((v) => {
+// // 		if (v.Imagesrc) {
+// // 			videosContainer.innerHTML += `
+// //         <div class="video-wrapper">
+// //           <div class="phone-mockup">
+// //             <video
+// //               id="${v.Videosrc}"
+// //               class="video-thumb"
+// // 			  controls
+// //               muted
+// //               autoplay
+// //               loop
+// //               playsinline
+// //               preload="metadata"
+// //               controlslist="nodownload "
+// //             >
+// //               <source src="${v.Videosrc}" type="video/mp4" />
+// //             </video>
+// //             <button class="video-overlay" type="button" aria-label="Ativar/desativar áudio"></button>
+// //           </div>
+
+// //           <img
+// //             src="${v.Imagesrc}"
+// //             alt="Sticker do produto"
+// //             class="product-sticker"
+// //           />
+
+// //           <div class="video-cat">${v.descricao}</div>
+// //         </div>`;
+// // 		} else {
+// // 			videosContainer.innerHTML += `
+// //         <div class="video-wrapper">
+// //           <div class="phone-mockup">
+// //             <video
+// //               class="video-thumb"
+// // 			  controls
+// //               muted
+// //               autoplay
+// //               loop
+// //               playsinline
+// //               preload="metadata"
+// //               controlslist="nodownload"
+// //             >
+// //               <source src="${v.Videosrc}" type="video/mp4" />
+// //             </video>
+// //             <button class="video-overlay" type="button" aria-label="Ativar/desativar áudio"></button>
+// //           </div>
+
+// //           <div class="video-cat">${v.descricao}</div>
+// //         </div>`;
+// // 		}
+// // 	});
+// // }
+
+// // init
+// try {
+// 	const videosInfo = await montarVideosInfoPorCategorias();
+// 	renderVideosPorCategoria(videosInfo);
+// 	// montarVideosMock(videosInfo);
+// } catch (err) {
+// 	videosContainer.innerHTML = "<p>Erro ao carregar vídeos do Supabase.</p>";
+// }

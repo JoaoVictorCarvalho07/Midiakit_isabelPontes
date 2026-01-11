@@ -361,14 +361,21 @@ a {
 	margin-bottom: 60px;
 	color: var(--color-accent);
 }
-
 .video-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-	gap: 2.5rem;
-	padding: 2rem 0;
-	margin-top: 40px;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px; /* espaço fixo entre itens */
 }
+
+@media (max-width: 640px) {
+	.video-grid {
+		gap: 8px; /* opcional: gap menor no celular */
+	}
+	.product-sticker {
+		display: none;
+	}
+}
+
 .video-wrapper {
 	position: relative;
 	display: flex;
@@ -378,7 +385,7 @@ a {
 .phone-mockup {
 	z-index: 1;
 	position: relative;
-	width: 100%;
+	width: 100px;
 	max-width: 280px;
 	aspect-ratio: 9/16;
 	border-radius: 24px;
@@ -388,6 +395,19 @@ a {
 	background-color: #000;
 	transition: transform 0.3s ease;
 }
+
+.video-wrapper {
+	min-width: 0;
+}
+.phone-mockup {
+	width: 100%;
+}
+.video-thumb {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
 .video-wrapper:hover .phone-mockup {
 	transform: translateY(-5px);
 }
@@ -1609,4 +1629,43 @@ a {
 	align-items: center;
 	gap: 18px;
 	color: var(--color-text-dark);
+}
+
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: larger;
+}
+.videos-section {
+	padding: 80px 0 0 0;
+	background-color: var(--color-bg-dark);
+	color: var(--color-text-light);
+}
+
+/* tirei o underline do "a" apenas para exemplificar no resultado*/
+a {
+	text-decoration: none;
+}
+
+.trasso {
+	position: relative;
+}
+
+.trasso::before,
+.trasso::after {
+	content: "";
+	border-bottom: 2px solid rgb(104, 64, 41);
+	position: absolute;
+	top: 100%;
+}
+
+.trasso::before {
+	width: 35%;
+	left: 0;
+}
+
+.trasso::after {
+	width: 35%;
+	right: 0;
 }
