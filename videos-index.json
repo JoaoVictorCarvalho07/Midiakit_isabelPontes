@@ -1,27 +1,21 @@
 {
-	"BELEZA": [
-        "Loreal.mp4",
-        "Dove.mp4",
-        "Pantene.mp4",
-        "Maquiagem.mp4"
-    ],
+	"BELEZA": ["Loreal.mp4", "Dove.mp4", "Pantene.mp4", "Maquiagem.mp4"],
 	"EVENTOS": [
 		"Natura_yoga.mp4",
-		"Mercado%20Livre.mp4",
-		"Top%20Girls%20Experience.mp4"
+		"Mercado Livre.mp4",
+		"Top Girls Experience.mp4"
 	],
-	"FITNESS": [
-        "Probiotica.mp4",
-         "Crossfit.mp4"
-        ],
+	"FITNESS": ["Probiotica.mp4", "Crossfit.mp4"],
 
-	"GASTRONOMIA": [
-        "Cafe_onirico.mp4"
-    ],
-	"MODA": [
-        "Pe_de_algodao.mp4"
-    ],
-	"SAUDE": [
-        "Redoxon.mp4"
-    ]
+	"GASTRONOMIA": ["Cafe_onirico.mp4", "Doces Bliss.mp4"],
+	"MODA": ["Pe_de_algodao.mp4", "Pri Joias.mp4", "Atelie Cris Tavares.mp4"],
+	"SAUDE": ["Redoxon.mp4","Ginocanisten.mp4"],
+	"PARCERIAS": ["Comu Delas.mp4"],
+	"diario de uma fotografa": [
+		"Isaresponde.mp4",
+		"Bate Papo.mp4",
+		"Musa Day Afrodite Lançamento.mp4",
+		"Musaday.mp4",
+		"Projeto Metamorfose.mp4"
+	]
 }
