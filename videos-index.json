@@ -1,21 +1,23 @@
 {
-	"BELEZA": ["Loreal.mp4", "Dove.mp4", "Pantene.mp4", "Maquiagem.mp4"],
+	"BELEZA": ["Loreal.webm", "Dove.webm", "Pantene.webm", "Maquiagem.webm","Elseve.webm"],
 	"EVENTOS": [
-		"Natura_yoga.mp4",
-		"Mercado Livre.mp4",
-		"Top Girls Experience.mp4"
+		"Natura_yoga.webm",
+		"Mercado Livre.webm",
+		"Top Girls Experience.webm"
 	],
-	"FITNESS": ["Probiotica.mp4", "Crossfit.mp4"],
+	"FITNESS": ["Probiotica.webm", "Crossfit.webm"],
 
-	"GASTRONOMIA": ["Cafe_onirico.mp4", "Doces Bliss.mp4"],
-	"MODA": ["Pe_de_algodao.mp4", "Pri Joias.mp4", "Atelie Cris Tavares.mp4"],
-	"SAUDE": ["Redoxon.mp4","Ginocanisten.mp4"],
-	"PARCERIAS": ["Comu Delas.mp4"],
+	"GASTRONOMIA": ["Cafe_onirico.webm", "Doces Bliss.webm"],
+	"MODA": ["Pe_de_algodao.webm", "Pri Joias.webm", "Atelie Cris Tavares.webm"],
+	"SAUDE": ["Redoxon.webm","Ginocanisten.webm"],
+	"PARCERIAS": ["Comu Delas.webm","Roda_das_Deusas.webm"],
 	"diario de uma fotografa": [
-		"Isaresponde.mp4",
-		"Bate Papo.mp4",
-		"Musa Day Afrodite Lançamento.mp4",
-		"Musaday.mp4",
-		"Projeto Metamorfose.mp4"
+		"Isaresponde.webm",
+		"Bate Papo.webm",
+		"Musa Day Afrodite Lançamento.webm",
+		"Musaday.webm",
+		"Projeto Metamorfose.webm",
+		"Organizando_acessorios.webm",
+		"Dicas_de_Camera.webm"
 	]
 }
