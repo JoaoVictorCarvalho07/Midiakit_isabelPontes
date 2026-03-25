@@ -1,5 +1,5 @@
 {
-	"BELEZA": ["Loreal.webm", "Dove.webm", "Pantene.webm", "Maquiagem.webm"],
+	"BELEZA": ["Loreal.webm", "Dove.webm", "Pantene.webm", "Maquiagem.webm","Elseve.webm"],
 	"EVENTOS": [
 		"Natura_yoga.webm",
 		"Mercado Livre.webm",
@@ -10,12 +10,14 @@
 	"GASTRONOMIA": ["Cafe_onirico.webm", "Doces Bliss.webm"],
 	"MODA": ["Pe_de_algodao.webm", "Pri Joias.webm", "Atelie Cris Tavares.webm"],
 	"SAUDE": ["Redoxon.webm","Ginocanisten.webm"],
-	"PARCERIAS": ["Comu Delas.webm"],
+	"PARCERIAS": ["Comu Delas.webm","Roda_das_Deusas.webm"],
 	"diario de uma fotografa": [
 		"Isaresponde.webm",
 		"Bate Papo.webm",
 		"Musa Day Afrodite Lançamento.webm",
 		"Musaday.webm",
-		"Projeto Metamorfose.webm"
+		"Projeto Metamorfose.webm",
+		"Organizando_acessorios.webm",
+		"Dicas_de_Camera.webm",
 	]
 }
