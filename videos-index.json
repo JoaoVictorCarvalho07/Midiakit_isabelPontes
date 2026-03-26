@@ -1,22 +1,29 @@
 {
-	"BELEZA": ["Loreal.webm", "Dove.webm", "Pantene.webm", "Maquiagem.webm","Elseve.webm"],
+	"BELEZA": [
+		"Loreal.webm",
+		"Dove.webm",
+		"Pantene.webm",
+		"Maquiagem.webm",
+		"Elseve.webm"
+	],
 	"EVENTOS": [
-		"Natura_yoga.webm",
-		"Mercado Livre.webm",
-		"Top Girls Experience.webm"
+		"Natura_Yoga.webm",
+		"Mercado_Livre.webm",
+		"Top_Girls_Experience.webm",
+		"Roda_Das_Deusas.webm"
 	],
 	"FITNESS": ["Probiotica.webm", "Crossfit.webm"],
 
-	"GASTRONOMIA": ["Cafe_onirico.webm", "Doces Bliss.webm"],
-	"MODA": ["Pe_de_algodao.webm", "Pri Joias.webm", "Atelie Cris Tavares.webm"],
-	"SAUDE": ["Redoxon.webm","Ginocanisten.webm"],
-	"PARCERIAS": ["Comu Delas.webm","Roda_das_Deusas.webm"],
+	"GASTRONOMIA": ["Cafe_Onirico.webm", "Doces_Bliss.webm"],
+	"MODA": ["Pe_De_Algodao.webm", "Pri_Joias.webm", "Atelie_Cris_Tavares.webm"],
+	"SAUDE": ["Redoxon.webm", "Ginocanisten.webm"],
+	"PARCERIAS": ["Comu_Delas.webm"],
 	"diario de uma fotografa": [
 		"Isaresponde.webm",
-		"Bate Papo.webm",
+		"Bate_Papo.webm",
 		"Musa Day Afrodite Lançamento.webm",
 		"Musaday.webm",
-		"Projeto Metamorfose.webm",
+		"Projeto_Metamorfose.webm",
 		"Organizando_acessorios.webm",
 		"Dicas_de_Camera.webm"
 	]

@@ -1,4 +1,4 @@
-const R2_BASE = "https://pub-ce003e0db03b420caa02ae72119c70f3.r2.dev";
+const R2_BASE = "https://pub-2584b081d14449de91b2354653b1d10f.r2.dev";
 const BASE_PATH = "videos-ugc"; // pasta raiz no R2
 const STICKERS_LOCAL = "./assets/videos/stickers"; // no github
 
