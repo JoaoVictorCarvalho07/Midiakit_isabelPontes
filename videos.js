@@ -1,4 +1,4 @@
-const R2_BASE = "https://pub-654a4f08d4484a208ef830ad56bc2806.r2.dev";
+const R2_BASE = "https://pub-ce003e0db03b420caa02ae72119c70f3.r2.dev";
 const BASE_PATH = "videos-ugc"; // pasta raiz no R2
 const STICKERS_LOCAL = "./assets/videos/stickers"; // no github
 
@@ -47,8 +47,8 @@ function renderVideosPorCategoria(videosInfo) {
 
 	videosContainer.innerHTML = Object.entries(groups)
 		.map(
-			([cat, items]) => 
-	`
+			([cat, items]) =>
+				`
       <section class="videos-section">
 
       	<div>
@@ -64,7 +64,7 @@ function renderVideosPorCategoria(videosInfo) {
         </div>
 		
       </section>
-	`
+	`,
 		)
 		.join("");
 }
@@ -118,7 +118,7 @@ const obs = new IntersectionObserver(
 			}
 		});
 	},
-	{ threshold: 0.35 }
+	{ threshold: 0.35 },
 );
 
 function observarVideos() {
@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				muteOthers(video);
 			}
 		},
-		true // <- capture!
+		true, // <- capture!
 	);
 	videosContainer.addEventListener("click", async (e) => {
 		const overlay = e.target.closest(".video-overlay");
